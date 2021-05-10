@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, {useState, useEffect} from 'react'
 import Paper from '@material-ui/core/Paper'
 import superagent from 'superagent'
 import Button from '@material-ui/core/Button'
@@ -6,12 +6,12 @@ import Typography from "@material-ui/core/Typography";
 import {Box, TextField} from "@material-ui/core";
 
 const Main = () => {
-    const [ posts, setPosts ] = useState([])
-    const [ title, setTitle ] = useState('')
-    const [ content, setContent ] = useState('')
+    const [posts, setPosts] = useState([])
+    const [title, setTitle] = useState('')
+    const [content, setContent] = useState('')
 
     const retrievePosts = async () => {
-        const { body } = await superagent.get('http://localhost:3001/posts')
+        const {body} = await superagent.get('http://localhost:3001/posts')
         setPosts(body)
     }
 
@@ -20,17 +20,28 @@ const Main = () => {
         retrievePosts()
     }
 
-    const createPost = async (title, content) => {
+    const createPost = async () => {
         await superagent.post('http://localhost:3001/create').send({
-            body: { title, content }
+            title, content
         })
         retrievePosts()
     }
 
     const editPost = async id => {
         await superagent.patch(`http://localhost:3001/edit?id=${id}`).send({
-            title: 'asdfasdfzzzzzzzzzzasf',
-            content: 'asdasdasdasdaszzzzzzzzzzzzzzzzzzdas',
+            title: 'Lorem Ipsum',
+            content: 'Lorem Ipsum is simply dummy text of ' +
+                'the printing and typesetting industry. ' +
+                'Lorem Ipsum has been the industry\'s ' +
+                'standard dummy text ever since the 1500s, ' +
+                'when an unknown printer took a galley of type ' +
+                'and scrambled it to make a type specimen book. ' +
+                'It has survived not only five centuries, but also ' +
+                'the leap into electronic typesetting, remaining essentially' +
+                ' unchanged. It was popularised in the 1960s with ' +
+                'the release of Letraset sheets containing Lorem Ipsum ' +
+                'passages, and more recently with desktop publishing software ' +
+                'like Aldus PageMaker including versions of Lorem Ipsum.',
         })
         retrievePosts()
     }
@@ -60,7 +71,7 @@ const Main = () => {
         textAlign: 'right',
         margin: '30px',
         fontSize: '10px',
-        fontStyle : 'italic',
+        fontStyle: 'italic',
     }
 
     const paperStyle = {
@@ -74,36 +85,58 @@ const Main = () => {
         fontSize: '70px',
     }
 
+    const createStyle = {
+        textAlign: 'center',
+        margin: '10px',
+        fontSize: '30px',
+    }
+
+
     return (
         <div>
             <Paper style={paperStyle} elevation={10}>
-                <Typography style={ headerStyle }>
+                <Typography style={headerStyle}>
                     MY BLOG
                 </Typography>
-                {/*<TextField value={title} onChange={event => event.target.value} />*/}
+            </Paper>
+            <Paper style={paperStyle} elevation={10}>
                 <Box textAlign='center'>
-                    <Button style={ buttonStyle } variant="contained" color="primary" onClick={() => createPost()}>
+                    <TextField label="Some cool title about yourself"
+                               id="margin-none"
+                               defaultValue="Default Value"
+                               helperText="Please enter the title" style={{width: '300px'}} value={title}
+                               onChange={event => setTitle(event.target.value)}/>
+                    <br/>
+                    <TextField label="Tell me about yourself"
+                               id="margin-none"
+                               defaultValue="Default Value"
+                               helperText="Please enter the content" style={{width: '300px'}} value={content}
+                               onChange={event => setContent(event.target.value)}/>
+                    <br/>
+                    <Button style={buttonStyle} variant="contained" color="primary" onClick={() => createPost()}>
                         Create a new post!
                     </Button>
                 </Box>
             </Paper>
             {posts.map(post => {
                 return (
-                    <Paper style={ paperStyle } elevation={10}>
-                        <Typography style={ titleStyle }>
+                    <Paper style={paperStyle} elevation={10}>
+                        <Typography style={titleStyle}>
                             {post.title}
-                            <Typography style={ contentStyle }>
+                            <Typography style={contentStyle}>
                                 {post.content}
                             </Typography>
-                            <Typography style={ dateStyle }>
+                            <Typography style={dateStyle}>
                                 {post.postDate}
                             </Typography>
                         </Typography>
                         <Box textAlign='center'>
-                            <Button style={ buttonStyle } variant="contained" color="primary" onClick={() => deletePost(post._id)}>
+                            <Button style={buttonStyle} variant="contained" color="primary"
+                                    onClick={() => deletePost(post._id)}>
                                 DELETE
                             </Button>
-                            <Button style={ buttonStyle } variant="contained" color="primary" onClick={() => editPost(post._id)}>
+                            <Button style={buttonStyle} variant="contained" color="primary"
+                                    onClick={() => editPost(post._id)}>
                                 EDIT
                             </Button>
                         </Box>
