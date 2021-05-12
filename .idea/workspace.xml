@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="73ee5314-217b-4c7a-84a2-6bdf04c52d35" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/containers/Main.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/containers/Main.jsx" afterDir="false" />
     </list>
@@ -52,11 +50,23 @@
       <workItem from="1619996769017" duration="8640000" />
       <workItem from="1620357172359" duration="10636000" />
       <workItem from="1620446954560" duration="17229000" />
-      <workItem from="1620681813308" duration="3292000" />
+      <workItem from="1620681813308" duration="16051000" />
     </task>
+    <task id="LOCAL-00001" summary="- Added create button functionality">
+      <created>1620685233317</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1620685233317</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="- Added create button functionality" />
+    <option name="LAST_COMMIT_MESSAGE" value="- Added create button functionality" />
   </component>
 </project>

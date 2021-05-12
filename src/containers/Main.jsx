@@ -3,12 +3,27 @@ import Paper from '@material-ui/core/Paper'
 import superagent from 'superagent'
 import Button from '@material-ui/core/Button'
 import Typography from "@material-ui/core/Typography";
-import {Box, TextField} from "@material-ui/core";
+import {Box, makeStyles, Modal, TextField} from "@material-ui/core";
 
 const Main = () => {
     const [posts, setPosts] = useState([])
     const [title, setTitle] = useState('')
     const [content, setContent] = useState('')
+    const [open, setOpen] = React.useState(false)
+    const [titleEditor, setTitleEditor] = useState('')
+    const [contentEditor, setContentEditor] = useState('')
+    const [idEditor, setIdEditor] = useState('')
+
+    const handleClose = () => {
+        setOpen(false)
+    }
+
+    const handleOpen = (oldId, oldTitle, oldContent) => {
+        setIdEditor(oldId)
+        setTitleEditor(oldTitle)
+        setContentEditor(oldContent)
+        setOpen(true)
+    }
 
     const retrievePosts = async () => {
         const {body} = await superagent.get('http://localhost:3001/posts')
@@ -27,22 +42,11 @@ const Main = () => {
         retrievePosts()
     }
 
-    const editPost = async id => {
-        await superagent.patch(`http://localhost:3001/edit?id=${id}`).send({
-            title: 'Lorem Ipsum',
-            content: 'Lorem Ipsum is simply dummy text of ' +
-                'the printing and typesetting industry. ' +
-                'Lorem Ipsum has been the industry\'s ' +
-                'standard dummy text ever since the 1500s, ' +
-                'when an unknown printer took a galley of type ' +
-                'and scrambled it to make a type specimen book. ' +
-                'It has survived not only five centuries, but also ' +
-                'the leap into electronic typesetting, remaining essentially' +
-                ' unchanged. It was popularised in the 1960s with ' +
-                'the release of Letraset sheets containing Lorem Ipsum ' +
-                'passages, and more recently with desktop publishing software ' +
-                'like Aldus PageMaker including versions of Lorem Ipsum.',
+    const editPost = async () => {
+        await superagent.patch(`http://localhost:3001/edit?id=${idEditor}`).send({
+            title: titleEditor, content: contentEditor
         })
+        setOpen(false)
         retrievePosts()
     }
 
@@ -85,15 +89,54 @@ const Main = () => {
         fontSize: '70px',
     }
 
-    const createStyle = {
-        textAlign: 'center',
-        margin: '10px',
-        fontSize: '30px',
+    const modalStyle = {
+        width: '500px',
+        top: '30%',
+        left: '30%',
+        position: 'absolute',
+        height: '350px'
     }
 
+    const textFieldStyle = {
+        margin: '10px',
+        marginTop: '20px',
+        position: 'center',
+        width: '480px',
+    }
 
     return (
         <div>
+            <Modal
+            open={open}
+            aria-labelledby="simple-modal-title"
+            aria-describedby="simple-modal-description"
+            onClose={handleClose}>
+            <Paper style={modalStyle}>
+                <div >
+                    <TextField style={textFieldStyle}
+                        label="Title"
+                        multiline
+                        rows={2}
+                        variant="outlined"
+                        value={titleEditor}
+                        onChange={event => setTitleEditor(event.target.value)}
+                    />
+                </div>
+                <div>
+                    <TextField  style={textFieldStyle}
+                    label="Content"
+                    multiline
+                    rows={6}
+                    variant="outlined"
+                    value={contentEditor}
+                    onChange={event => setContentEditor(event.target.value)}
+                />
+                </div>
+                <Button style={buttonStyle} variant="contained" color="primary" onClick={() => editPost()}>
+                    SUBMIT
+                </Button>
+            </Paper>
+        </Modal>
             <Paper style={paperStyle} elevation={10}>
                 <Typography style={headerStyle}>
                     MY BLOG
@@ -102,14 +145,10 @@ const Main = () => {
             <Paper style={paperStyle} elevation={10}>
                 <Box textAlign='center'>
                     <TextField label="Some cool title about yourself"
-                               id="margin-none"
-                               defaultValue="Default Value"
                                helperText="Please enter the title" style={{width: '300px'}} value={title}
                                onChange={event => setTitle(event.target.value)}/>
                     <br/>
                     <TextField label="Tell me about yourself"
-                               id="margin-none"
-                               defaultValue="Default Value"
                                helperText="Please enter the content" style={{width: '300px'}} value={content}
                                onChange={event => setContent(event.target.value)}/>
                     <br/>
@@ -120,7 +159,7 @@ const Main = () => {
             </Paper>
             {posts.map(post => {
                 return (
-                    <Paper style={paperStyle} elevation={10}>
+                    <Paper key={post._id} elevation={10}>
                         <Typography style={titleStyle}>
                             {post.title}
                             <Typography style={contentStyle}>
@@ -136,7 +175,7 @@ const Main = () => {
                                 DELETE
                             </Button>
                             <Button style={buttonStyle} variant="contained" color="primary"
-                                    onClick={() => editPost(post._id)}>
+                                    onClick={() => handleOpen(post._id, post.title, post.content)}>
                                 EDIT
                             </Button>
                         </Box>
